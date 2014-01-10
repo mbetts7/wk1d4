@@ -15,25 +15,30 @@
 # Create a method that allows the person to eat and add arrays of food to their stomachs
 # If a food array contains a known allergy reject the food.
 
+
+# would you put rescue in the eat function???
+
 class AllergyError < ArgumentError
 end
  
 class Person
 	
-	attr_accessor :stomach, :allergies
+	attr_accessor :name, :stomach, :allergies
 
-	def initialize(allergies)
+	def initialize(name, allergies)
+		@name = name
 		@stomach = []
 		@allergies = allergies
 	end
 
 	def eat(food)
-		@stomach += food
-		for item in @stomach                 # could do .each do item
+		food.each do |item|
 			if item == @allergies
 				@stomach = []
 				# puts "You shouldn't eat #{item}. You spit them out"  ---- don't need this because rescue error takes care of it
 				raise AllergyError.new("You are allergic to that")
+			else @stomach.push(food)
+				puts "#{name} ate #{food}"
 			end
         end
 	end
@@ -45,12 +50,11 @@ pizza = ["cheese", "gluten", "tomatoes"]
 pan_seared_scallops = ["scallops", "lemons", "pasta", "olive oil"]
 water = ["h", "h", "o"]
 
-Chris = Person.new("gluten")
+Chris = Person.new("Chris", "gluten")
 puts Chris
 
-Beth = Person.new("scallops")
-puts Chris
-Beth
+Beth = Person.new("Beth","scallops")
+puts Beth
 
 begin
 	Chris.eat(pizza)
@@ -59,7 +63,7 @@ rescue AllergyError
 end
 
 begin
-Beth.eat(pan_seared_scallops)
+Beth.eat(pizza)
 rescue AllergyError 
 	puts "Beth could not eat gluten.  Stomach has been emptied."
 end
